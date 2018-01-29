@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  multicloud.filesharing.k8s.storage.service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"

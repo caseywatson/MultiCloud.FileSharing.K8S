@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Storage", "MultiCloud.FileSharing.K8S.Storage\MultiCloud.FileSharing.K8S.Storage.csproj", "{66E7ADFA-6101-4B67-8F92-EBB39E370F1B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Storage.Azure", "MultiCloud.FileStorage.K8S.Storage.Azure\MultiCloud.FileSharing.K8S.Storage.Azure.csproj", "{78360F1C-101D-485F-8790-94C0E0848651}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Storage.AWS", "MultiCloud.FileStorage.K8S.Storage.AWS\MultiCloud.FileSharing.K8S.Storage.AWS.csproj", "{4D9A0969-6020-4120-AA86-074BF86D840D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Storage.GCP", "MultiCloud.FileStorage.K8S.Storage.GCP\MultiCloud.FileSharing.K8S.Storage.GCP.csproj", "{8A3E803A-161B-4300-9764-38BDDAE68264}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{69E14BF9-2D65-47CB-A204-F72ED783F6F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S", "MultiCloud.FileSharing.K8S\MultiCloud.FileSharing.K8S.csproj", "{4A6E2757-069D-44AA-AADD-4EC66AF7AD34}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Storage.Service", "MultiCloud.FileSharing.K8S.Storage.Service\MultiCloud.FileSharing.K8S.Storage.Service.csproj", "{86CBE0AE-C67D-47B6-B706-06F08DC822A7}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{390C090F-1F61-4806-ABBE-01DE49D6BFB1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Storage.Client", "MultiCloud.FileSharing.K8S.Storage.Client\MultiCloud.FileSharing.K8S.Storage.Client.csproj", "{D60FFF55-C4D6-43E5-A7D3-B3418B81F430}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66E7ADFA-6101-4B67-8F92-EBB39E370F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E7ADFA-6101-4B67-8F92-EBB39E370F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E7ADFA-6101-4B67-8F92-EBB39E370F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E7ADFA-6101-4B67-8F92-EBB39E370F1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78360F1C-101D-485F-8790-94C0E0848651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78360F1C-101D-485F-8790-94C0E0848651}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78360F1C-101D-485F-8790-94C0E0848651}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78360F1C-101D-485F-8790-94C0E0848651}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D9A0969-6020-4120-AA86-074BF86D840D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D9A0969-6020-4120-AA86-074BF86D840D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D9A0969-6020-4120-AA86-074BF86D840D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D9A0969-6020-4120-AA86-074BF86D840D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A3E803A-161B-4300-9764-38BDDAE68264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A3E803A-161B-4300-9764-38BDDAE68264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A3E803A-161B-4300-9764-38BDDAE68264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A3E803A-161B-4300-9764-38BDDAE68264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6E2757-069D-44AA-AADD-4EC66AF7AD34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6E2757-069D-44AA-AADD-4EC66AF7AD34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6E2757-069D-44AA-AADD-4EC66AF7AD34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6E2757-069D-44AA-AADD-4EC66AF7AD34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86CBE0AE-C67D-47B6-B706-06F08DC822A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86CBE0AE-C67D-47B6-B706-06F08DC822A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86CBE0AE-C67D-47B6-B706-06F08DC822A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86CBE0AE-C67D-47B6-B706-06F08DC822A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{390C090F-1F61-4806-ABBE-01DE49D6BFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{390C090F-1F61-4806-ABBE-01DE49D6BFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{390C090F-1F61-4806-ABBE-01DE49D6BFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{390C090F-1F61-4806-ABBE-01DE49D6BFB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D60FFF55-C4D6-43E5-A7D3-B3418B81F430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60FFF55-C4D6-43E5-A7D3-B3418B81F430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D60FFF55-C4D6-43E5-A7D3-B3418B81F430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D60FFF55-C4D6-43E5-A7D3-B3418B81F430}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{66E7ADFA-6101-4B67-8F92-EBB39E370F1B} = {69E14BF9-2D65-47CB-A204-F72ED783F6F8}
+		{78360F1C-101D-485F-8790-94C0E0848651} = {69E14BF9-2D65-47CB-A204-F72ED783F6F8}
+		{4D9A0969-6020-4120-AA86-074BF86D840D} = {69E14BF9-2D65-47CB-A204-F72ED783F6F8}
+		{8A3E803A-161B-4300-9764-38BDDAE68264} = {69E14BF9-2D65-47CB-A204-F72ED783F6F8}
+		{86CBE0AE-C67D-47B6-B706-06F08DC822A7} = {69E14BF9-2D65-47CB-A204-F72ED783F6F8}
+		{D60FFF55-C4D6-43E5-A7D3-B3418B81F430} = {69E14BF9-2D65-47CB-A204-F72ED783F6F8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {79C3D2C1-FE04-48BE-B0AC-332617C38A3E}
+	EndGlobalSection
+EndGlobal

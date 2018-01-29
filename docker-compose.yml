@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  multicloud.filesharing.k8s.storage.service:
+    image: multicloud.filesharing.k8s.storage.service
+    build:
+      context: ./MultiCloud.FileSharing.K8S.Storage.Service
+      dockerfile: Dockerfile
