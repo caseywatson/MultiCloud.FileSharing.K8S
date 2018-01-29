@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MultiCloud.FileSharing.K8S.Storage.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Requests;
-using System;
 using System.Threading.Tasks;
 
 namespace MultiCloud.FileSharing.K8S.Storage.Service.Controllers
