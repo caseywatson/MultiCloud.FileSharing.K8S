@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using MultiCloud.FileSharing.K8S.Extensions;
 using MultiCloud.FileSharing.K8S.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Requests;
@@ -38,12 +39,12 @@ namespace MultiCloud.FileStorage.K8S.Storage.Azure.Providers
             cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
         }
 
-        public Task<IGetBlobStrategy> CreateGetBlobStrategyAsync(GetBlobRequest request)
+        public Task<IGetBlobStrategy> CreateGetBlobStrategyAsync(GetBlobRequest getBlobRequest)
         {
-            ValidateRequest(request);
+            getBlobRequest.ValidateArgument(nameof(getBlobRequest));
 
-            var container = cloudBlobClient.GetContainerReference(request.ContainerName.ToLower());
-            var blob = container.GetBlockBlobReference(request.BlobName);
+            var container = cloudBlobClient.GetContainerReference(getBlobRequest.ContainerName.ToLower());
+            var blob = container.GetBlockBlobReference(getBlobRequest.BlobName);
 
             var sasStartTime = DateTime.UtcNow.Add(urlStartOffset);
             var sasExpirationTime = DateTime.UtcNow.Add(urlDuration);
@@ -64,12 +65,12 @@ namespace MultiCloud.FileStorage.K8S.Storage.Azure.Providers
             return Task.FromResult(new HttpGetBlobStrategy(strategyConfiguration) as IGetBlobStrategy);
         }
 
-        public Task<IPutBlobStrategy> CreatePutBlobStrategyAsync(PutBlobRequest request)
+        public Task<IPutBlobStrategy> CreatePutBlobStrategyAsync(PutBlobRequest putBlobRequest)
         {
-            ValidateRequest(request);
+            putBlobRequest.ValidateArgument(nameof(putBlobRequest));
 
-            var container = cloudBlobClient.GetContainerReference(request.ContainerName.ToLower());
-            var blob = container.GetBlockBlobReference(request.BlobName);
+            var container = cloudBlobClient.GetContainerReference(putBlobRequest.ContainerName.ToLower());
+            var blob = container.GetBlockBlobReference(putBlobRequest.BlobName);
 
             var sasStartTime = DateTime.UtcNow.Add(urlStartOffset);
             var sasExpirationTime = DateTime.UtcNow.Add(urlDuration);
@@ -85,7 +86,7 @@ namespace MultiCloud.FileStorage.K8S.Storage.Azure.Providers
             {
                 Url = (blob.Uri + blob.GetSharedAccessSignature(sasBlobPolicy)),
                 UrlExpirationUtc = sasExpirationTime,
-                ContentType = (request.ContentType ?? defaultContentType),
+                ContentType = (putBlobRequest.ContentType ?? defaultContentType),
                 RequestHeaders = new Dictionary<string, string>
                 {
                     ["x-ms-blob-type"] = xMsBlockBlobType
@@ -93,21 +94,6 @@ namespace MultiCloud.FileStorage.K8S.Storage.Azure.Providers
             };
 
             return Task.FromResult(new HttpPutBlobStrategy(strategyConfiguration) as IPutBlobStrategy);
-        }
-
-        private void ValidateRequest(IRequest request)
-        {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-
-            try
-            {
-                request.Validate();
-            }
-            catch (InvalidOperationException ioEx)
-            {
-                throw new ArgumentException($"[{nameof(request)}] is invalid.", nameof(request), ioEx);
-            }
         }
 
         public class Options : IValidatable

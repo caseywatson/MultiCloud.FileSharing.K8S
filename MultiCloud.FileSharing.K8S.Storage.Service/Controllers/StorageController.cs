@@ -23,17 +23,10 @@ namespace MultiCloud.FileSharing.K8S.Storage.Service.Controllers
             if (string.IsNullOrEmpty(blobName))
                 return BadRequest($"Blob name is required (e.g., 'http://.../get-blob/{containerName}/[blobName]').");
 
-            try
-            {
-                var getBlobRequest = new GetBlobRequest(containerName, blobName);
-                var getBlobStrategy = await storageStrategyProvider.CreateGetBlobStrategyAsync(getBlobRequest);
+            var getBlobRequest = new GetBlobRequest(containerName, blobName);
+            var getBlobStrategy = await storageStrategyProvider.CreateGetBlobStrategyAsync(getBlobRequest);
 
-                return new ObjectResult(getBlobStrategy);
-            }
-            catch (ArgumentException aEx)
-            {
-                return BadRequest(aEx.Message);
-            }
+            return new ObjectResult(getBlobStrategy);
         }
 
         [HttpGet("put-blob/{containerName}/{*blobName}")]
@@ -42,17 +35,10 @@ namespace MultiCloud.FileSharing.K8S.Storage.Service.Controllers
             if (string.IsNullOrEmpty(blobName))
                 return BadRequest($"Blob name is required (e.g., 'http://.../put-blob/{containerName}/[blobName]').");
 
-            try
-            {
-                var putBlobRequest = new PutBlobRequest(containerName, blobName, contentType);
-                var putBlobStrategy = await storageStrategyProvider.CreatePutBlobStrategyAsync(putBlobRequest);
+            var putBlobRequest = new PutBlobRequest(containerName, blobName, contentType);
+            var putBlobStrategy = await storageStrategyProvider.CreatePutBlobStrategyAsync(putBlobRequest);
 
-                return new ObjectResult(putBlobStrategy);
-            }
-            catch (ArgumentException aEx)
-            {
-                return BadRequest(aEx.Message);
-            }
+            return new ObjectResult(putBlobStrategy);
         }
     }
 }

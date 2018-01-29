@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Options;
+using MultiCloud.FileSharing.K8S.Extensions;
 using MultiCloud.FileSharing.K8S.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Requests;
@@ -38,17 +39,17 @@ namespace MultiCloud.FileStorage.K8S.Storage.AWS.Providers
             s3Client = CreateS3Client(options);
         }
 
-        public Task<IGetBlobStrategy> CreateGetBlobStrategyAsync(GetBlobRequest request)
+        public Task<IGetBlobStrategy> CreateGetBlobStrategyAsync(GetBlobRequest getBlobRequest)
         {
-            ValidateRequest(request);
+            getBlobRequest.ValidateArgument(nameof(getBlobRequest));
 
             var urlExpirationTime = DateTime.UtcNow.Add(urlDuration);
 
             var urlRequest = new GetPreSignedUrlRequest
             {
-                BucketName = request.ContainerName,
+                BucketName = getBlobRequest.ContainerName,
                 Expires = urlExpirationTime,
-                Key = request.BlobName,
+                Key = getBlobRequest.BlobName,
                 Protocol = Protocol.HTTPS,
                 Verb = HttpVerb.GET
             };
@@ -62,19 +63,19 @@ namespace MultiCloud.FileStorage.K8S.Storage.AWS.Providers
             return Task.FromResult(new HttpGetBlobStrategy(strategyConfiguration) as IGetBlobStrategy);
         }
 
-        public Task<IPutBlobStrategy> CreatePutBlobStrategyAsync(PutBlobRequest request)
+        public Task<IPutBlobStrategy> CreatePutBlobStrategyAsync(PutBlobRequest putBlobRequest)
         {
-            ValidateRequest(request);
+            putBlobRequest.ValidateArgument(nameof(putBlobRequest));
 
-            var contentType = (request.ContentType ?? defaultContentType);
+            var contentType = (putBlobRequest.ContentType ?? defaultContentType);
             var urlExpirationTime = DateTime.UtcNow.Add(urlDuration);
 
             var urlRequest = new GetPreSignedUrlRequest
             {
-                BucketName = request.ContainerName,
+                BucketName = putBlobRequest.ContainerName,
                 ContentType = contentType,
                 Expires = urlExpirationTime,
-                Key = request.BlobName,
+                Key = putBlobRequest.BlobName,
                 Protocol = Protocol.HTTPS,
                 Verb = HttpVerb.PUT
             };
@@ -103,26 +104,12 @@ namespace MultiCloud.FileStorage.K8S.Storage.AWS.Providers
             return new AmazonS3Client(options.AWSAccessKeyId, options.AWSSecretAccessKey, regionEndpoint);
         }
 
-        private void ValidateRequest(IRequest request)
-        {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-
-            try
-            {
-                request.Validate();
-            }
-            catch (InvalidOperationException ioEx)
-            {
-                throw new ArgumentException($"[{nameof(request)}] is invalid.", nameof(request), ioEx);
-            }
-        }
-
         public class Options : IValidatable
         {
             public string AWSAccessKeyId { get; set; }
             public string AWSSecretAccessKey { get; set; }
             public string AWSRegionName { get; set; }
+
             public TimeSpan? UrlDuration { get; set; }
 
             public void Validate()

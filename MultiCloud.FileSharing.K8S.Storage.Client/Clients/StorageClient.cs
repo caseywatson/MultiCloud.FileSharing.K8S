@@ -1,4 +1,5 @@
-﻿using MultiCloud.FileSharing.K8S.Interfaces;
+﻿using MultiCloud.FileSharing.K8S.Extensions;
+using MultiCloud.FileSharing.K8S.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Client.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Requests;
 using System;
@@ -22,19 +23,19 @@ namespace MultiCloud.FileSharing.K8S.Storage.Client.Clients
             this.storageServiceProxy = storageServiceProxy;
         }
 
-        public async Task<Stream> GetBlobAsync(GetBlobRequest request)
+        public async Task<Stream> GetBlobAsync(GetBlobRequest getBlobRequest)
         {
-            ValidateRequest(request);
+            getBlobRequest.ValidateArgument(nameof(getBlobRequest));
 
-            var strategyDefinition = await storageServiceProxy.GetGetBlobStrategyDefinitionAsync(request);
+            var strategyDefinition = await storageServiceProxy.GetGetBlobStrategyDefinitionAsync(getBlobRequest);
             var getBlobStrategy = await getBlobStrategyFactory.CreateStrategyAsync(strategyDefinition);
 
             return await getBlobStrategy.GetBlobAsync();
         }
 
-        public async Task PutBlobAsync(PutBlobRequest request, Stream blobStream)
+        public async Task PutBlobAsync(PutBlobRequest putBlobRequest, Stream blobStream)
         {
-            ValidateRequest(request);
+            putBlobRequest.ValidateArgument(nameof(putBlobRequest));
 
             if (blobStream == null)
                 throw new ArgumentNullException(nameof(blobStream));
@@ -42,25 +43,10 @@ namespace MultiCloud.FileSharing.K8S.Storage.Client.Clients
             if (blobStream.Length == 0)
                 throw new ArgumentException($"[{nameof(blobStream)}] can not be empty.", nameof(blobStream));
 
-            var strategyDefinition = await storageServiceProxy.GetPutBlobStrategyDefinitionAsync(request);
+            var strategyDefinition = await storageServiceProxy.GetPutBlobStrategyDefinitionAsync(putBlobRequest);
             var putBlobStrategy = await putBlobStrategyFactory.CreateStrategyAsync(strategyDefinition);
 
             await putBlobStrategy.PutBlobAsync(blobStream);
-        }
-
-        private void ValidateRequest(IRequest request)
-        {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-
-            try
-            {
-                request.Validate();
-            }
-            catch (InvalidOperationException ioEx)
-            {
-                throw new ArgumentException($"[{nameof(request)}] is invalid. See inner exception for details.", ioEx);
-            }
         }
     }
 }

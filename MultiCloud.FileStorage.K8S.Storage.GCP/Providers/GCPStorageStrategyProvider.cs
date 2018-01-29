@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
+using MultiCloud.FileSharing.K8S.Extensions;
 using MultiCloud.FileSharing.K8S.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Requests;
@@ -33,15 +34,15 @@ namespace MultiCloud.FileStorage.K8S.Storage.GCP.Providers
             urlSigner = CreateUrlSigner(options);
         }
 
-        public Task<IGetBlobStrategy> CreateGetBlobStrategyAsync(GetBlobRequest request)
+        public Task<IGetBlobStrategy> CreateGetBlobStrategyAsync(GetBlobRequest getBlobRequest)
         {
-            ValidateRequest(request);
+            getBlobRequest.ValidateArgument(nameof(getBlobRequest));
 
             var expirationTimeUtc = DateTime.UtcNow.Add(urlDuration);
 
             var getBlobUrl = urlSigner.Sign(
-                request.ContainerName,
-                request.BlobName,
+                getBlobRequest.ContainerName,
+                getBlobRequest.BlobName,
                 expirationTimeUtc,
                 HttpMethod.Get);
 
@@ -54,16 +55,16 @@ namespace MultiCloud.FileStorage.K8S.Storage.GCP.Providers
             return Task.FromResult(new HttpGetBlobStrategy(strategyConfiguration) as IGetBlobStrategy);
         }
 
-        public Task<IPutBlobStrategy> CreatePutBlobStrategyAsync(PutBlobRequest request)
+        public Task<IPutBlobStrategy> CreatePutBlobStrategyAsync(PutBlobRequest putBlobRequest)
         {
-            ValidateRequest(request);
+            putBlobRequest.ValidateArgument(nameof(putBlobRequest));
 
-            var contentType = (request.ContentType ?? defaultContentType);
+            var contentType = (putBlobRequest.ContentType ?? defaultContentType);
             var expirationTimeUtc = DateTime.UtcNow.Add(urlDuration);
 
             var putBlobUrl = urlSigner.Sign(
-                request.ContainerName,
-                request.BlobName,
+                putBlobRequest.ContainerName,
+                putBlobRequest.BlobName,
                 expirationTimeUtc,
                 HttpMethod.Put,
                 contentHeaders: new Dictionary<string, IEnumerable<string>>
@@ -86,21 +87,6 @@ namespace MultiCloud.FileStorage.K8S.Storage.GCP.Providers
             var credential = GoogleCredential.FromFile(options.GCPServiceCredentialFilePath);
 
             return UrlSigner.FromServiceAccountCredential(credential.UnderlyingCredential as ServiceAccountCredential);
-        }
-
-        private void ValidateRequest(IRequest request)
-        {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-
-            try
-            {
-                request.Validate();
-            }
-            catch (InvalidOperationException ioEx)
-            {
-                throw new ArgumentException($"[{nameof(request)}] is invalid.", nameof(request), ioEx);
-            }
         }
 
         public class Options : IValidatable
