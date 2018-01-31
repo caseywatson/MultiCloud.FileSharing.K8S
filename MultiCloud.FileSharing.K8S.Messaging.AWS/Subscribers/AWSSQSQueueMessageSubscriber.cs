@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using MultiCloud.FileSharing.K8S.AWS;
 using MultiCloud.FileSharing.K8S.Interfaces;
+using MultiCloud.FileSharing.K8S.Messaging.AWS.Constants;
 using MultiCloud.FileSharing.K8S.Messaging.Interfaces;
 using System;
 using System.Linq;
@@ -61,13 +62,21 @@ namespace MultiCloud.FileSharing.K8S.Messaging.AWS.Subscribers
             if (sqsMessage == null)
                 throw new ArgumentNullException(nameof(sqsMessage));
 
-            var message = new Message
+            var message = new Message { Content = sqsMessage.Body };
+
+            foreach (var attributeKey in sqsMessage.MessageAttributes.Keys)
             {
-                Content = sqsMessage.Body,
-                Attributes = sqsMessage.MessageAttributes.ToDictionary(a => a.Key, a => (object)(a.Value.StringValue))
-            };
+                var attributeValue = sqsMessage.MessageAttributes[attributeKey].StringValue;
 
-
+                if (attributeKey == PlatformAttributes.Id)
+                {
+                    message.Id = attributeValue;
+                }
+                else
+                {
+                    message.Attributes[attributeKey] = attributeValue;
+                }
+            }
 
             return message;
         }

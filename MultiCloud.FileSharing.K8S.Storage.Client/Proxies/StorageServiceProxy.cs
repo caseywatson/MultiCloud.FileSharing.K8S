@@ -32,7 +32,7 @@ namespace MultiCloud.FileSharing.K8S.Storage.Client.Proxies
             getBlobRequest.ValidateArgument(nameof(getBlobRequest));
 
             var relativeUrl = new Uri($"/get-blob/{getBlobRequest.ContainerName}/{getBlobRequest.BlobName}", UriKind.Relative);
-            var response = await httpClient.GetStringAsync(new Uri(baseUrl, relativeUrl));
+            var response = await httpClient.GetStringAsync(new Uri(baseUrl, relativeUrl)).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<StorageStrategyDefinition>(response);
         }
@@ -47,7 +47,7 @@ namespace MultiCloud.FileSharing.K8S.Storage.Client.Proxies
                 relativeUrlBuilder.Append($"?contentType={putBlobRequest.ContentType}");
 
             var relativeUrl = new Uri(relativeUrlBuilder.ToString(), UriKind.Relative);
-            var response = await httpClient.GetStringAsync(new Uri(baseUrl, relativeUrl));
+            var response = await httpClient.GetStringAsync(new Uri(baseUrl, relativeUrl)).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<StorageStrategyDefinition>(response);
         }

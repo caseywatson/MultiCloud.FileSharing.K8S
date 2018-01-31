@@ -36,11 +36,11 @@ namespace MultiCloud.FileSharing.K8S.Storage.Strategies
             foreach (var headerKey in Configuration.RequestHeaders.Keys)
                 httpRequest.Headers[headerKey] = Configuration.RequestHeaders[headerKey];
 
-            using (var requestStream = (await httpRequest.GetRequestStreamAsync()))
+            using (var requestStream = (await httpRequest.GetRequestStreamAsync().ConfigureAwait(false)))
             {
                 var outputStream = new MemoryStream();
 
-                await requestStream.CopyToAsync(outputStream);
+                await requestStream.CopyToAsync(outputStream).ConfigureAwait(false);
 
                 return outputStream;
             }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MultiCloud.FileSharing.K8S.AWS;
 using MultiCloud.FileSharing.K8S.Extensions;
 using MultiCloud.FileSharing.K8S.Interfaces;
+using MultiCloud.FileSharing.K8S.Messaging.AWS.Constants;
 using MultiCloud.FileSharing.K8S.Messaging.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -41,11 +42,11 @@ namespace MultiCloud.FileSharing.K8S.Messaging.AWS.Publishers
         {
             var request = new SendMessageRequest(publisherOptions.QueueUrl, message.Content);
 
-            if (string.IsNullOrEmpty(message.Id) == false)
-                request.MessageAttributes.Add("_Id", new MessageAttributeValue { StringValue = message.Id });
-
             foreach (var attributeKey in message.Attributes.Keys)
                 request.MessageAttributes.Add(attributeKey, new MessageAttributeValue { StringValue = message.Attributes[attributeKey].ToString() });
+
+            if (string.IsNullOrEmpty(message.Id) == false)
+                request.MessageAttributes[PlatformAttributes.Id] = new MessageAttributeValue { StringValue = message.Id };
 
             return request;
         }
