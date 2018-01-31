@@ -1,85 +1,26 @@
 ﻿using Microsoft.Azure.ServiceBus;
+using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Options;
 using MultiCloud.FileSharing.K8S.Interfaces;
-using MultiCloud.FileSharing.K8S.Messaging.Azure.Extensions;
 using MultiCloud.FileSharing.K8S.Messaging.Interfaces;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MultiCloud.FileSharing.K8S.Messaging.Azure.Subscribers
 {
-    public class AzureServiceBusSubscriptionMessageSubscriber : IMessageSubscriber
+    public class AzureServiceBusSubscriptionMessageSubscriber : BaseAzureServiceBusMessageSubscriber
     {
-        private readonly IMessageHandler messageHandler;
-        private readonly SubscriptionClient subscriptionClient;
-
-        private bool isSubscribed;
+        private readonly Options options;
 
         public AzureServiceBusSubscriptionMessageSubscriber(IMessageHandler messageHandler, IOptions<Options> optionsAccessor)
+            : base(messageHandler)
         {
-            var options = optionsAccessor.Value;
+            options = optionsAccessor.Value;
 
             options.Validate();
-
-            this.messageHandler = messageHandler;
-
-            subscriptionClient = new SubscriptionClient(options.AzureServiceBusConnectionString,
-                                                        options.SubscriptionName,
-                                                        options.TopicName);
         }
 
-        public bool IsClosed => subscriptionClient.IsClosedOrClosing;
-
-        public Task SubscribeAsync(CancellationToken cancelToken)
-        {
-            if (cancelToken == null)
-                throw new ArgumentNullException(nameof(cancelToken));
-
-            if (IsClosed)
-                throw new InvalidOperationException("Service bus connection has already been closed.");
-
-            if ((isSubscribed == false) && (cancelToken.IsCancellationRequested == false))
-            {
-                var messageHandlerOptions = new MessageHandlerOptions(HandleMessagingExceptionAsync) { AutoComplete = false };
-
-                cancelToken.Register(async () => await subscriptionClient.CloseAsync().ConfigureAwait(false));
-                subscriptionClient.RegisterMessageHandler(HandleMessageAsync, messageHandlerOptions);
-
-                isSubscribed = true;
-            }
-
-            return Task.CompletedTask;
-        }
-
-        private async Task HandleMessageAsync(Microsoft.Azure.ServiceBus.Message sbMessage, CancellationToken cancelToken)
-        {
-            var messageContext = new MessageContext(
-                sbMessage.ToStandardMessage(),
-                () => AbandonMessageAsync(sbMessage, cancelToken),
-                () => CompleteMessageAsync(sbMessage, cancelToken));
-
-            await messageHandler.HandleMessageAsync(messageContext);
-        }
-
-        private async Task AbandonMessageAsync(Microsoft.Azure.ServiceBus.Message sbMessage, CancellationToken cancelToken)
-        {
-            if (cancelToken.IsCancellationRequested == false)
-                await subscriptionClient.AbandonAsync(sbMessage.SystemProperties.LockToken).ConfigureAwait(false);
-        }
-
-        private async Task CompleteMessageAsync(Microsoft.Azure.ServiceBus.Message sbMessage, CancellationToken cancelToken)
-        {
-            if (cancelToken.IsCancellationRequested == false)
-                await subscriptionClient.CompleteAsync(sbMessage.SystemProperties.LockToken).ConfigureAwait(false);
-        }
-
-        private Task HandleMessagingExceptionAsync(ExceptionReceivedEventArgs eventArgs)
-        {
-            // TODO: Log this exception.
-
-            return Task.CompletedTask;
-        }
+        protected override IReceiverClient CreateReceiverClient() =>
+            new SubscriptionClient(options.AzureServiceBusConnectionString, options.TopicName, options.SubscriptionName);
 
         public class Options : IValidatable
         {

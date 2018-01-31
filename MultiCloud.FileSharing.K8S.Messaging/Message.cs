@@ -7,6 +7,6 @@ namespace MultiCloud.FileSharing.K8S.Messaging
         public string Id { get; set; }
         public string Content { get; set; }
 
-        public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
+        public IDictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
     }
 }

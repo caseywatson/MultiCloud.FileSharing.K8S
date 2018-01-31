@@ -1,6 +1,5 @@
 ﻿using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Options;
-using MultiCloud.FileSharing.K8S.Extensions;
 using MultiCloud.FileSharing.K8S.Interfaces;
 using MultiCloud.FileSharing.K8S.Messaging.Interfaces;
 using System;
@@ -24,7 +23,8 @@ namespace MultiCloud.FileSharing.K8S.Messaging.Azure.Publishers
 
         public async Task PublishMessageAsync(Message message)
         {
-            message.ValidateArgument(nameof(message));
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
 
             var sbMessage = new Microsoft.Azure.ServiceBus.Message(Encoding.UTF8.GetBytes(message.Content));
 

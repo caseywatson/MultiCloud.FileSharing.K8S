@@ -5,6 +5,8 @@ namespace MultiCloud.FileSharing.K8S.Messaging.Interfaces
 {
     public interface IMessageSubscriber
     {
-        Task SubscribeAsync(IMessageHandler messageHandler, CancellationToken cancelToken);
+        bool IsClosed { get; }
+
+        Task SubscribeAsync(CancellationToken cancelToken);
     }
 }

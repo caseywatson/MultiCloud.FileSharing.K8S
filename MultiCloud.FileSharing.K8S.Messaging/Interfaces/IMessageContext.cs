@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace MultiCloud.FileSharing.K8S.Messaging.Interfaces
 {
-    public interface IMessageContext : IValidatable
+    public interface IMessageContext
     {
         Message Message { get; }
 
