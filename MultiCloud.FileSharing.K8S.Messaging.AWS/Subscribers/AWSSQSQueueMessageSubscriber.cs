@@ -44,7 +44,7 @@ namespace MultiCloud.FileSharing.K8S.Messaging.AWS.Subscribers
                 var receiveResponse = await sqsClient.ReceiveMessageAsync(subscriberOptions.QueueUrl).ConfigureAwait(false);
                 var sqsMessage = receiveResponse.Messages?.FirstOrDefault();
 
-                if (sqsMessage == null)
+                if (sqsMessage != null)
                 {
                     var messageContext = new MessageContext(
                         ToStandardMessage(sqsMessage),
