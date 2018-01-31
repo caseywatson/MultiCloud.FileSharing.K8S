@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Options;
+using MultiCloud.FileSharing.K8S.AWS;
 using MultiCloud.FileSharing.K8S.Extensions;
 using MultiCloud.FileSharing.K8S.Interfaces;
 using MultiCloud.FileSharing.K8S.Storage.Interfaces;
@@ -20,23 +21,26 @@ namespace MultiCloud.FileStorage.K8S.Storage.AWS.Providers
 
         private static readonly TimeSpan defaultUrlDuration;
 
-        private readonly Options options;
-        private readonly TimeSpan urlDuration;
+        private readonly Options providerOptions;
         private readonly AmazonS3Client s3Client;
+        private readonly TimeSpan urlDuration;
 
         static AWSS3StorageStrategyProvider()
         {
             defaultUrlDuration = TimeSpan.FromMinutes(5);
         }
 
-        public AWSS3StorageStrategyProvider(IOptions<Options> optionsAccessor)
+        public AWSS3StorageStrategyProvider(IOptions<AWSAccessOptions> accessOptionsAccessor, 
+                                            IOptions<Options> providerOptionsAccessor)
         {
-            options = optionsAccessor.Value;
+            providerOptions = providerOptionsAccessor.Value;
 
-            options.Validate();
+            var accessOptions = accessOptionsAccessor.Value;
 
-            urlDuration = (options.UrlDuration ?? defaultUrlDuration);
-            s3Client = CreateS3Client(options);
+            accessOptions.Validate();
+
+            s3Client = CreateS3Client(accessOptions);
+            urlDuration = (providerOptions.UrlDuration ?? defaultUrlDuration);
         }
 
         public Task<IGetBlobStrategy> CreateGetBlobStrategyAsync(GetBlobRequest getBlobRequest)
@@ -90,39 +94,17 @@ namespace MultiCloud.FileStorage.K8S.Storage.AWS.Providers
             return Task.FromResult(new HttpPutBlobStrategy(strategyConfiguration) as IPutBlobStrategy);
         }
 
-        private AmazonS3Client CreateS3Client(Options options)
+        private AmazonS3Client CreateS3Client(AWSAccessOptions accessOptions)
         {
-            var regionName = options.AWSRegionName.ToLower();
-            var regionEndpoints = RegionEndpoint.EnumerableAllRegions.ToList();
-
-            var regionEndpoint = regionEndpoints.FirstOrDefault(
-                re => (re.DisplayName.ToLower() == regionName) || (re.SystemName.ToLower() == regionName));
-
-            if (regionEndpoint == null)
-                throw new InvalidOperationException($"AWS region [{options.AWSRegionName}] does not exist.");
-
-            return new AmazonS3Client(options.AWSAccessKeyId, options.AWSSecretAccessKey, regionEndpoint);
+            return new AmazonS3Client(
+                accessOptions.AWSAccessKeyId, 
+                accessOptions.AWSSecretAccessKey, 
+                AWSRegionEndpoints.GetEndpointByRegionName(accessOptions.AWSRegionName));
         }
 
-        public class Options : IValidatable
+        public class Options
         {
-            public string AWSAccessKeyId { get; set; }
-            public string AWSSecretAccessKey { get; set; }
-            public string AWSRegionName { get; set; }
-
             public TimeSpan? UrlDuration { get; set; }
-
-            public void Validate()
-            {
-                if (string.IsNullOrEmpty(AWSAccessKeyId))
-                    throw new InvalidOperationException($"[{nameof(AWSAccessKeyId)}] is required.");
-
-                if (string.IsNullOrEmpty(AWSSecretAccessKey))
-                    throw new InvalidOperationException($"[{nameof(AWSSecretAccessKey)}] is required.");
-
-                if (string.IsNullOrEmpty(AWSRegionName))
-                    throw new InvalidOperationException($"[{nameof(AWSRegionName)}] is required.");
-            }
         }
     }
 }

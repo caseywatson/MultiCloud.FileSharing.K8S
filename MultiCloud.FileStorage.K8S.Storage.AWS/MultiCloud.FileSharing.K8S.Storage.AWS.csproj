@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MultiCloud.FileSharing.K8S.AWS\MultiCloud.FileSharing.K8S.AWS.csproj" />
     <ProjectReference Include="..\MultiCloud.FileSharing.K8S.Storage\MultiCloud.FileSharing.K8S.Storage.csproj" />
   </ItemGroup>
 

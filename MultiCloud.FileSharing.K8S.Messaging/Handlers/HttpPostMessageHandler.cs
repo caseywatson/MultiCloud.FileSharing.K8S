@@ -38,14 +38,14 @@ namespace MultiCloud.FileSharing.K8S.Messaging.Handlers
             try
             {
                 var httpContent = new StringContent(message.Content, Encoding.UTF8, options.MessageContentType);
-                var postUrl = options.PostToUrl.Merge(message.Attributes);
+                var postToUrl = options.PostToUrl.Merge(message.Attributes);
 
                 httpClient.DefaultRequestHeaders.Clear();
 
                 foreach (var headerKey in requestHeaders.Keys)
                     httpClient.DefaultRequestHeaders.Add(headerKey, requestHeaders[headerKey].Merge(message.Attributes));
 
-                var httpResponse = await httpClient.PostAsync(postUrl, httpContent);
+                var httpResponse = await httpClient.PostAsync(postToUrl, httpContent);
 
                 await (httpResponse.IsSuccessStatusCode ? messageContext.CompleteAsync() : messageContext.AbandonAsync());
             }

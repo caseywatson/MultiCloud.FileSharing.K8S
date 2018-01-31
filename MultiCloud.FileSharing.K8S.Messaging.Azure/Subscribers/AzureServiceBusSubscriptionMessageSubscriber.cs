@@ -19,12 +19,11 @@ namespace MultiCloud.FileSharing.K8S.Messaging.Azure.Subscribers
             options.Validate();
         }
 
-        protected override IReceiverClient CreateReceiverClient() => CreateSubscriptionClient();
-
-        private SubscriptionClient CreateSubscriptionClient()
-        {
-            return new SubscriptionClient(options.AzureServiceBusConnectionString, options.TopicName, options.SubscriptionName);
-        }
+        protected override IReceiverClient CreateReceiverClient() =>
+            new SubscriptionClient(
+                options.AzureServiceBusConnectionString,
+                options.TopicName,
+                options.SubscriptionName);
 
         public class Options : IValidatable
         {

@@ -2,38 +2,40 @@
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Options;
 using MultiCloud.FileSharing.K8S.Interfaces;
+using MultiCloud.FileSharing.K8S.Messaging.Interfaces;
 using System;
 
-namespace MultiCloud.FileSharing.K8S.Messaging.Azure.Publishers
+namespace MultiCloud.FileSharing.K8S.Messaging.Azure.Subscribers
 {
-    public class AzureServiceBusTopicMessagePublisher : BaseAzureServiceBusMessagePublisher
+    public class AzureServiceBusQueueMessageSubscriber : BaseAzureServiceBusMessageSubscriber
     {
         private readonly Options options;
 
-        public AzureServiceBusTopicMessagePublisher(IOptions<Options> optionsAccessor)
+        public AzureServiceBusQueueMessageSubscriber(IMessageHandler messageHandler, IOptions<Options> optionsAccessor)
+            : base(messageHandler)
         {
             options = optionsAccessor.Value;
 
             options.Validate();
         }
 
-        protected override ISenderClient CreateSenderClient() =>
-            new TopicClient(
+        protected override IReceiverClient CreateReceiverClient() =>
+            new QueueClient(
                 options.AzureServiceBusConnectionString,
-                options.TopicName);
+                options.QueueName);
 
         public class Options : IValidatable
         {
             public string AzureServiceBusConnectionString { get; set; }
-            public string TopicName { get; set; }
+            public string QueueName { get; set; }
 
             public void Validate()
             {
                 if (string.IsNullOrEmpty(AzureServiceBusConnectionString))
                     throw new InvalidOperationException($"[{nameof(AzureServiceBusConnectionString)}] is required.");
 
-                if (string.IsNullOrEmpty(TopicName))
-                    throw new InvalidOperationException($"[{nameof(TopicName)}] is required.");
+                if (string.IsNullOrEmpty(QueueName))
+                    throw new InvalidOperationException($"[{nameof(QueueName)}] is required.");
             }
         }
     }
