@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.0.24" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MultiCloud.FileSharing.K8S.AWS\MultiCloud.FileSharing.K8S.AWS.csproj" />
+    <ProjectReference Include="..\MultiCloud.FileSharing.K8S.Messaging\MultiCloud.FileSharing.K8S.Messaging.csproj" />
+  </ItemGroup>
+
+</Project>

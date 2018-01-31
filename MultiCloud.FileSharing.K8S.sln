@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Messaging.Azure", "MultiCloud.FileSharing.K8S.Messaging.Azure\MultiCloud.FileSharing.K8S.Messaging.Azure.csproj", "{0A990F78-7634-4E1B-926A-74D7B7221361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiCloud.FileSharing.K8S.Messaging.AWS", "..\MultiCloud.FileSharing.K8S.Messaging.AWS\MultiCloud.FileSharing.K8S.Messaging.AWS.csproj", "{25950574-679B-4C4C-83A1-C3FCC9C9EBFA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiCloud.FileSharing.K8S.AWS", "MultiCloud.FileSharing.K8S.AWS\MultiCloud.FileSharing.K8S.AWS.csproj", "{55541A96-F2B8-46F2-959F-C81F927FDA59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCloud.FileSharing.K8S.Messaging.AWS", "MultiCloud.FileSharing.K8S.Messaging.AWS\MultiCloud.FileSharing.K8S.Messaging.AWS.csproj", "{9E065711-0A90-4F5B-9D3A-D8B1E0E5D855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,14 +77,14 @@ Global
 		{0A990F78-7634-4E1B-926A-74D7B7221361}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A990F78-7634-4E1B-926A-74D7B7221361}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A990F78-7634-4E1B-926A-74D7B7221361}.Release|Any CPU.Build.0 = Release|Any CPU
-		{25950574-679B-4C4C-83A1-C3FCC9C9EBFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25950574-679B-4C4C-83A1-C3FCC9C9EBFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25950574-679B-4C4C-83A1-C3FCC9C9EBFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25950574-679B-4C4C-83A1-C3FCC9C9EBFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55541A96-F2B8-46F2-959F-C81F927FDA59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55541A96-F2B8-46F2-959F-C81F927FDA59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55541A96-F2B8-46F2-959F-C81F927FDA59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55541A96-F2B8-46F2-959F-C81F927FDA59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E065711-0A90-4F5B-9D3A-D8B1E0E5D855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E065711-0A90-4F5B-9D3A-D8B1E0E5D855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E065711-0A90-4F5B-9D3A-D8B1E0E5D855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E065711-0A90-4F5B-9D3A-D8B1E0E5D855}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,7 +98,7 @@ Global
 		{D60FFF55-C4D6-43E5-A7D3-B3418B81F430} = {69E14BF9-2D65-47CB-A204-F72ED783F6F8}
 		{280CC9D9-5C05-49EA-8B76-63D02A29D5D1} = {F2336DDA-CC9E-4CC8-ABBD-EFA7D3D78073}
 		{0A990F78-7634-4E1B-926A-74D7B7221361} = {F2336DDA-CC9E-4CC8-ABBD-EFA7D3D78073}
-		{25950574-679B-4C4C-83A1-C3FCC9C9EBFA} = {F2336DDA-CC9E-4CC8-ABBD-EFA7D3D78073}
+		{9E065711-0A90-4F5B-9D3A-D8B1E0E5D855} = {F2336DDA-CC9E-4CC8-ABBD-EFA7D3D78073}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {79C3D2C1-FE04-48BE-B0AC-332617C38A3E}
